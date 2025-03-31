@@ -21,96 +21,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head> 
     <body class="text-gray-900">
+        <button id="togglePanel" class="toggle-panel">☰ Controles</button>
+
         <div class="container mx-auto my-10 p-6 shadow-lg rounded-lg max-w-3xl">
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-3xl font-bold">Generador de Diseño</h1>
                 <button id="modoOscuro" class="bg-gray-700 text-white py-2 px-4 rounded-lg">🌙</button>
             </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium">Color de Fondo:</label>
-                    <input type="color" id="colorFondo" value="#ffffff" class="w-full h-10 border rounded-lg">
-                </div>
-                <div class="fondocoloreli mt-4">
-                    <button onclick="quitarColorFondo()" class="boton- color boton-quitarfondo mt-2 w-full   py-2 rounded-lg">
-                        Quitar Color de Fondo
-                    </button>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium">Color de Texto:</label>
-                    <input type="color" id="colorTexto" value="#000000" class="w-full h-10 border rounded-lg">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium">Fuente:</label>
-                    <select id="fuenteTexto" class="w-full h-10 border rounded-lg">
-                        <option value="Poppins">Poppins</option>
-                        <option value="Arial">Arial</option>
-                        <option value="Verdana">Verdana</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Courier New">Courier New</option>
-                        <option value="Roboto">Roboto</option>
-                    </select>
-                </div>
-                <div class="degradado">
-                    <h2 class="text-xl font-bold">Opciones de Degradado</h2>
-                    <label class="block text-sm font-medium">Color Inicial:</label>
-                    <input type="color" id="gradienteColor1" value="#ff0000" class="w-full h-10 border rounded-lg">
-                    <label class="block text-sm font-medium mt-2">Color Final:</label>
-                    <input type="color" id="gradienteColor2" value="#0000ff" class="w-full h-10 border rounded-lg">
-                    <label class="block text-sm font-medium mt-2">Dirección:</label>
-                    <select id="gradienteDireccion" class="w-full h-10 border rounded-lg">
-                        <option value="to right">Izquierda a Derecha</option>
-                        <option value="to left">Derecha a Izquierda</option>
-                        <option value="to bottom">Arriba a Abajo</option>
-                        <option value="to top">Abajo a Arriba</option>
-                        <option value="to bottom right">Diagonal (Arriba Izquierda a Abajo Derecha)</option>
-                        <option value="to bottom left">Diagonal (Arriba Derecha a Abajo Izquierda)</option>
-                    </select>
-                    <button onclick="aplicarDegradado()" class="boton-aplide mt-4 w-full  py-2 rounded-lg">Aplicar Degradado</button>
-                </div>
-                
-                <!-- Botón fuera del contenedor degradado -->
-                <div class="mt-4">
-                    <button onclick="quitarDegradado()" class="boton-quitade mt-2 w-full  py-2 rounded-lg">
-                        Quitar Degradado
-                    </button>
-                </div>
-            </div>
-            <label class="block text-sm font-medium">Imagen o GIF de Fondo:</label>
-            <input type="file" id="imagenFondo" accept="image/*" class="w-full h-10 border rounded-lg mt-2">
-            <button onclick="aplicarImagenFondo()" class="apli12 mt-2 w-full  py-2 rounded-lg">
-                Aplicar Imagen/GIF
-            </button>
-            <button onclick="quitarImagenFondo()" class="quita1 mt-2 w-full  py-2 rounded-lg">
-                Quitar Imagen/GIF
-            </button>
-            <button onclick="aplicarEstilos()" class="aplicares mt-4 w-full  py-2 rounded-lg">Aplicar Diseño</button>
-            <button onclick="agregarElemento()" class="addse mt-2 w-full  py-2 rounded-lg">Agregar Sección</button>
-            <h2 class="text-2xl font-bold mt-6">Código CSS Generado</h2>
-            <button onclick="generarCSS()" class="cssbut mt-2 w-full  py-2 rounded-lg">
-                Generar CSS
-            </button>
-            <h2 class="text-2xl font-bold mt-6">Código HTML Generado</h2>
-<button onclick="descargarHTML()" class="htmldes mt-2 w-full  py-2 rounded-lg">
-    Descargar HTML
-</button>
-<button onclick="generarHTML()" class="htmlgen mt-2 w-full  py-2 rounded-lg">
-    Mostrar HTML
-</button>
-<div class="alinear">
-<button onclick="alinearElementos('izquierda')">Alinear Izquierda</button>
-<button onclick="alinearElementos('derecha')">Alinear Derecha</button>
-<button onclick="alinearElementos('centro')">Alinear Centro</button>
-</div>
-<div id="codigoHTMLContainer" class="mt-4 p-4 bg-gray-200 rounded-lg hidden">
-    <pre id="codigoHTML" class="whitespace-pre-wrap"></pre>
-</div>
-            <div id="codigoCSSContainer" class="mt-4 p-4 bg-gray-200 rounded-lg hidden">
-                <pre id="codigoCSS" class="whitespace-pre-wrap"></pre>
-                <button onclick="descargarCSS()" class="mt-2  py-2 px-4 rounded-lg">Descargar CSS</button>
-            </div>
-            
             <h2 class="text-2xl font-bold mt-6">Área de Previsualización</h2>
             <div id="previewArea" class="preview-area relative mt-4"></div>
             <div id="modal">
@@ -135,9 +52,98 @@
             <input type="file" id="cargarDiseno" class="hidden" onchange="cargarDiseno(event)">
             <label for="cargarDiseno" class="cargarDiseño mt-2 ">Cargar Diseño</label>
             <pre id="codigoCSS"></pre>
+            <button onclick="exportarComoImagen()" class="imagenex mt-2">Exportar como Imagen</button>
+
             </div>
         </div>
-        <button onclick="exportarComoImagen()" class="imagenex mt-2">Exportar como Imagen</button>
+        <div class="panel-controles">
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium">Color de Fondo:</label>
+                <input type="color" id="colorFondo" value="#ffffff" class="w-full h-10 border rounded-lg">
+            </div>
+            <div class="fondocoloreli mt-4">
+                <button onclick="quitarColorFondo()" class="boton- color boton-quitarfondo mt-2 w-full   py-2 rounded-lg">
+                    Quitar Color de Fondo
+                </button>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Color de Texto:</label>
+                <input type="color" id="colorTexto" value="#000000" class="w-full h-10 border rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Fuente:</label>
+                <select id="fuenteTexto" class="w-full h-10 border rounded-lg">
+                    <option value="Poppins">Poppins</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Roboto">Roboto</option>
+                </select>
+            </div>
+            <div class="degradado">
+                <h2 class="text-xl font-bold">Opciones de Degradado</h2>
+                <label class="block text-sm font-medium">Color Inicial:</label>
+                <input type="color" id="gradienteColor1" value="#ff0000" class="w-full h-10 border rounded-lg">
+                <label class="block text-sm font-medium mt-2">Color Final:</label>
+                <input type="color" id="gradienteColor2" value="#0000ff" class="w-full h-10 border rounded-lg">
+                <label class="block text-sm font-medium mt-2">Dirección:</label>
+                <select id="gradienteDireccion" class="w-full h-10 border rounded-lg">
+                    <option value="to right">Izquierda a Derecha</option>
+                    <option value="to left">Derecha a Izquierda</option>
+                    <option value="to bottom">Arriba a Abajo</option>
+                    <option value="to top">Abajo a Arriba</option>
+                    <option value="to bottom right">Diagonal (Arriba Izquierda a Abajo Derecha)</option>
+                    <option value="to bottom left">Diagonal (Arriba Derecha a Abajo Izquierda)</option>
+                </select>
+                <button onclick="aplicarDegradado()" class="boton-aplide mt-4 w-full  py-2 rounded-lg">Aplicar Degradado</button>
+            </div>
+            
+            <!-- Botón fuera del contenedor degradado -->
+            <div class="mt-4">
+                <button onclick="quitarDegradado()" class="boton-quitade mt-2 w-full  py-2 rounded-lg">
+                    Quitar Degradado
+                </button>
+            </div>
+        </div>
+        <label class="block text-sm font-medium">Imagen o GIF de Fondo:</label>
+        <input type="file" id="imagenFondo" accept="image/*" class="w-full h-10 border rounded-lg mt-2">
+        <button onclick="aplicarImagenFondo()" class="apli12 mt-2 w-full  py-2 rounded-lg">
+            Aplicar Imagen/GIF
+        </button>
+        <button onclick="quitarImagenFondo()" class="quita1 mt-2 w-full  py-2 rounded-lg">
+            Quitar Imagen/GIF
+        </button>
+        <button onclick="aplicarEstilos()" class="aplicares mt-4 w-full  py-2 rounded-lg">Aplicar Diseño</button>
+        <button onclick="agregarElemento()" class="addse mt-2 w-full  py-2 rounded-lg">Agregar Sección</button>
+        <h2 class="text-2xl font-bold mt-6">Código CSS Generado</h2>
+        <button onclick="generarCSS()" class="cssbut mt-2 w-full  py-2 rounded-lg">
+            Generar CSS
+        </button>
+        <h2 class="text-2xl font-bold mt-6">Código HTML Generado</h2>
+<button onclick="descargarHTML()" class="htmldes mt-2 w-full  py-2 rounded-lg">
+Descargar HTML
+</button>
+<button onclick="generarHTML()" class="htmlgen mt-2 w-full  py-2 rounded-lg">
+Mostrar HTML
+</button>
+<div class="alinear">
+<button onclick="alinearElementos('izquierda')">Alinear Izquierda</button>
+<button onclick="alinearElementos('derecha')">Alinear Derecha</button>
+<button onclick="alinearElementos('centro')">Alinear Centro</button>
+</div>
+<div id="codigoHTMLContainer" class="mt-4 p-4 bg-gray-200 rounded-lg hidden">
+<pre id="codigoHTML" class="whitespace-pre-wrap"></pre>
+</div>
+
+        <div id="codigoCSSContainer" class="mt-4 p-4 bg-gray-200 rounded-lg hidden">
+            <pre id="codigoCSS" class="whitespace-pre-wrap"></pre>
+            <button onclick="descargarCSS()" class="mt-2  py-2 px-4 rounded-lg">Descargar CSS</button>
+        </div>
+    </div>
+
 
         <div class="paletas-container bg-gray-100 p-4 rounded-lg shadow-lg">
             <h2 class="text-xl font-bold mb-4">Sugerencias de Paletas</h2>

@@ -59,6 +59,12 @@ document.getElementById("modoOscuro").addEventListener("click", () => {
     } else {
         container.classList.remove("dark-container");
     }
+    const panelControles = document.querySelector('.panel-controles');
+    if (document.body.classList.contains("dark-mode")) {
+        panelControles.classList.add("dark-panel");
+    } else {
+        panelControles.classList.remove("dark-panel");
+    }
 });
 
 function generarHTML() {
@@ -93,6 +99,13 @@ function generarHTML() {
             background-repeat: no-repeat;
             color: #000000;
             font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .elemento {
+            position: absolute;
+            box-sizing: border-box;
+            border: 1px solid #000;
         }
     </style>
 </head>
@@ -117,22 +130,21 @@ function generarHTML() {
     elementos.forEach((el, index) => {
         let bgColor = el.style.backgroundColor || "#ffffff";
         let textColor = el.style.color || "#000000";
-        let width = el.style.width || "100px";
-        let height = el.style.height || "100px";
-        let left = el.style.left || "0px";
-        let top = el.style.top || "0px";
+        let width = (parseInt(el.style.width) / previewArea.clientWidth) * 100 || 10; // Convertir a porcentaje
+        let height = (parseInt(el.style.height) / previewArea.clientHeight) * 100 || 10; // Convertir a porcentaje
+        let left = (parseInt(el.style.left) / previewArea.clientWidth) * 100 || 0; // Convertir a porcentaje
+        let top = (parseInt(el.style.top) / previewArea.clientHeight) * 100 || 0; // Convertir a porcentaje
         let content = el.innerHTML || "";
 
         html += `
-        <div class="elemento-${index}" style="
+        <div class="elemento elemento-${index}" style="
             background-color: ${bgColor};
             color: ${textColor};
-            width: ${width};
-            height: ${height};
-            position: absolute;
-            left: ${left};
-            top: ${top};
-            border: 1px solid #000;">
+            width: ${width}%; /* Usar porcentaje para el ancho */
+            height: ${height}%; /* Usar porcentaje para el alto */
+            left: ${left}%; /* Usar porcentaje para la posición horizontal */
+            top: ${top}%; /* Usar porcentaje para la posición vertical */
+        ">
             ${content}
         </div>
         `;
@@ -762,3 +774,33 @@ function generarColorAleatorio() {
 
 
 
+// Función para manejar el botón de mostrar/ocultar el panel
+function configurarPanelControles() {
+    const toggleButton = document.getElementById("togglePanel");
+    const panel = document.querySelector(".panel-controles");
+    const container = document.querySelector(".container");
+
+    // Mostrar/ocultar el panel al hacer clic en el botón
+    toggleButton.addEventListener("click", (e) => {
+        e.stopPropagation(); // Evitar que el clic en el botón cierre el panel
+        panel.classList.toggle("visible");
+
+        // Ajustar el contenedor según la visibilidad del panel
+        if (panel.classList.contains("visible")) {
+            container.classList.add("panel-visible");
+        } else {
+            container.classList.remove("panel-visible");
+        }
+    });
+
+    // Cerrar el panel si se hace clic fuera de él
+    document.addEventListener("click", (e) => {
+        if (!panel.contains(e.target) && !toggleButton.contains(e.target)) {
+            panel.classList.remove("visible");
+            container.classList.remove("panel-visible");
+        }
+    });
+}
+
+// Llamar a la función después de que el DOM esté cargado
+document.addEventListener("DOMContentLoaded", configurarPanelControles);
