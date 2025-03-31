@@ -1,6 +1,6 @@
 # Generador de Diseño
 
-Este proyecto es una herramienta interactiva desarrollada por luis ferandno galvis moreno que permite a los usuarios crear diseños personalizados para páginas web, generando código HTML y CSS dinámicamente. Es ideal para diseñadores y desarrolladores que buscan una forma rápida y visual de construir interfaces.
+Este proyecto es una herramienta interactiva desarrollada por luis fernando galvis moreno que permite a los usuarios crear diseños personalizados para páginas web, generando código HTML y CSS dinámicamente. Es ideal para diseñadores y desarrolladores que buscan una forma rápida y visual de construir interfaces.
 
 ## Características
 
