@@ -450,3 +450,47 @@ background: none;
         padding: 12px; /* Incrementa el padding para un mejor diseño */
     }
 }
+@media (max-width: 1506px) {
+    .paletas-container {
+        position: static;
+        margin: 200px auto;
+        z-index: 1;
+    }
+
+    .paleta {
+        flex: 1 1 calc(50% - 12px); /* Ajustar el ancho al 50% */
+    }
+
+    .color:hover {
+        transform: scale(1.03); /* Ajustar el efecto de escala */
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Ajustar la sombra */
+    }
+
+    .imagenex {
+        width: 50%; /* Ajustar el ancho al 50% */
+        height: auto;
+        padding: 10px;
+    }
+}
+@media (max-width: 1366px) {
+    .paletas-container {
+        position: static;
+        margin: 200px auto;
+        z-index: 1;
+    }
+
+    .paleta {
+        flex: 1 1 calc(50% - 12px); /* Ajustar el ancho al 50% */
+    }
+
+    .color:hover {
+        transform: scale(1.03); /* Ajustar el efecto de escala */
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Ajustar la sombra */
+    }
+
+    .imagenex {
+        width: 50%; /* Ajustar el ancho al 50% */
+        height: auto;
+        padding: 10px;
+    }
+}
