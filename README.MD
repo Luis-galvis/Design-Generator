@@ -26,8 +26,5 @@ Este proyecto es una herramienta interactiva desarrollada por luis ferandno galv
 
 
    
-### Detalles adicionales
-- **Capturas de pantalla**:
 
-- **Licencia**: Si no tienes un archivo de licencia, puedes agregar uno (por ejemplo, MIT o GPL).
-- **Enlace al repositorio**: Si planeas subirlo a GitHub, reemplaza `https://github.com/tu-usuario/coloresweb.git` con el enlace real de tu repositorio.
+- **Enlace al repositorio**: `https://github.com/Luis-galvis/Design-Generator`.
