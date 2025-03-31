@@ -9,8 +9,8 @@ document.getElementById("modoOscuro").addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
     document.body.classList.toggle("bg-gray-800");
     document.body.classList.toggle("text-white");
-    document.querySelector('.container').classList.toggle("bg-gray-800");
-    document.querySelector('.container').classList.toggle("text-white");
+    document.querySelector('.container12').classList.toggle("bg-gray-800");
+    document.querySelector('.container12').classList.toggle("text-white");
 
     // Ajustar el estilo del contenedor del código CSS
     const codigoCSSContainer = document.getElementById('codigoCSSContainer');
@@ -53,11 +53,11 @@ document.getElementById("modoOscuro").addEventListener("click", () => {
     }
 
     // Ajustar el estilo del contenedor principal
-    const container = document.querySelector('.container');
+    const container = document.querySelector('.container12');
     if (document.body.classList.contains("dark-mode")) {
-        container.classList.add("dark-container");
+        container.classList.add("dark-container12");
     } else {
-        container.classList.remove("dark-container");
+        container.classList.remove("dark-container12");
     }
     const panelControles = document.querySelector('.panel-controles');
     if (document.body.classList.contains("dark-mode")) {
@@ -778,7 +778,7 @@ function generarColorAleatorio() {
 function configurarPanelControles() {
     const toggleButton = document.getElementById("togglePanel");
     const panel = document.querySelector(".panel-controles");
-    const container = document.querySelector(".container");
+    const container = document.querySelector(".container12");
 
     // Mostrar/ocultar el panel al hacer clic en el botón
     toggleButton.addEventListener("click", (e) => {

@@ -6,17 +6,19 @@ body {
     background-color: #f8f7b2;
     color: #2d3748;
 }
-.container {
-    margin-left: 690px; /* Reducir el margen izquierdo para hacer el contenedor más ancho */
+.container12 {
+    width: 100%;
+    max-width: 800px; /* Controla el ancho máximo */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
     padding: 20px;
-    flex: 1; /* Ocupa el resto del espacio disponible */
+    flex: 1;
     background-color: white;
     background: linear-gradient(to right, #f6d365, #fda085);
     box-shadow: 0 0 10px 1px black;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 .panel-controles {
-    max-width: 650px;
+    max-width: 520px;
     width: 100%; 
     background: linear-gradient(to right, #f6d365, #fda085);
     padding: 20px;
@@ -118,7 +120,7 @@ body {
     color: #2d3748; /* Texto oscuro */
     box-shadow: 0 0 10px 1px black; /* Sombra consistente */
 }
-.container.dark-container {
+.container12.dark-container12 {
     background: linear-gradient(to right, #bdc3c7, #2c3e50); /* Degradado plateado */
     color: black; /* Texto claro */
     box-shadow: 0 0 10px 1px black; /* Sombra consistente */
@@ -480,24 +482,24 @@ background: none;
 .right { right: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
 
 @media (max-width: 1506px) {
-    .container {
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 680px;
-        margin-right: 20px;
-        flex: 1;
+    .container12 {
+        position: absolute; /* Posiciona el contenedor de forma absoluta */
+        right: 10px; /* Alinea el contenedor al borde derecho */
+        top: 0; /* Asegura que esté en la parte superior */
+        width: 60%; /* Ajusta el ancho según sea necesario */
+        max-width: 1200px; /* Define un límite de ancho */
+        margin: 0; /* Elimina márgenes automáticos */
+        padding: 20px; /* Espaciado interno */
         background-color: white;
         background: linear-gradient(to right, #f6d365, #fda085);
         box-shadow: 0 0 10px 1px black;
         transition: background-color 0.3s ease, color 0.3s ease;
-        height: calc(100vh - 20px);
-        margin-bottom: 20px;
+        height: calc(100vh - 20px); /* Ajusta la altura */
     }
 
     .paletas-container {
         position: relative;
-        margin-left: 820px;
+        margin-left: 55vw;
         margin-top: 1200px;
         z-index: 1;
         display: flex;
@@ -515,7 +517,7 @@ background: none;
 }
 
 @media (max-width: 1366px) {
-    .container {
+    .container12 {
         position: absolute;
         right: 0;
         top: 0;
@@ -554,7 +556,7 @@ background: none;
         width: 420px;
     }
 
-    .container {
+    .container12 {
         position: absolute;
         right: 0;
         top: 0;
@@ -588,7 +590,7 @@ background: none;
     }
 }
 @media (max-width: 1175px) {
-    .container {
+    .container12 {
         position: absolute;
         right: 0;
         top: 0;
@@ -622,7 +624,7 @@ background: none;
     }
 }
 @media (max-width: 1024px) {
-    .container {
+    .container12 {
         position: absolute;
         right: 0;
         top: 0;
@@ -659,7 +661,7 @@ background: none;
     .panel-controles {
         width: 380px;
     }
-    .container {
+    .container12 {
         position: absolute;
         right: 0;
         top: 0;
@@ -696,7 +698,7 @@ background: none;
     .panel-controles {
         width: 300px;
     }
-    .container {
+    .container12 {
         position: absolute;
         right: 0;
         top: 0;
@@ -758,13 +760,13 @@ background: none;
         flex: 1 1 calc(50% - 12px);
     }
 
-    .container {
+    .container12 {
         margin-left: 0; /* Ocupa todo el ancho cuando el panel está oculto */
         width: 95%;
         transition: margin-left 0.3s ease;
     }
 
-    .container.panel-visible {
+    .container12.panel-visible {
         margin-left: 300px; /* Ajustar el margen cuando el panel está visible */
     }
 }
@@ -811,7 +813,7 @@ background: none;
     }
 }
 @media (max-width: 400px) {
-    .container{
+    .containe12{
         height: 130vh;
     }
     .paletas-container {
