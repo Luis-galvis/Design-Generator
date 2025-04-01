@@ -310,6 +310,15 @@ function descargarCSS() {
         previewArea.appendChild(elemento);
         elementos.push(elemento); // Agregamos el elemento a la lista para detectar colisiones
         elemento.ondblclick = () => abrirModal(elemento); // Cambiar a doble clic
+         // Manejo de presión prolongada en móviles
+    let pressTimer;
+    elemento.addEventListener("touchstart", (e) => {
+        pressTimer = setTimeout(() => abrirModal(elemento), 500); // 500ms para activarlo
+    });
+
+    elemento.addEventListener("touchend", () => clearTimeout(pressTimer));
+    elemento.addEventListener("touchmove", () => clearTimeout(pressTimer)); // Cancela si se mueve
+
         hacerDraggable(elemento);
         hacerRedimensionable(elemento);
     }

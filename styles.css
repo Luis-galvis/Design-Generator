@@ -179,11 +179,12 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #b9f4ffa4;
+    background: #75e7fc;
     padding: 20px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    z-index: 110000;
 }
 #modal button{
     margin: 10px;
