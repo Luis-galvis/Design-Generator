@@ -50,7 +50,6 @@
             <button onclick="guardarDiseno()" class="mt-2 w-full   py-2 rounded-lg">Guardar Diseño</button>
             <input type="file" id="cargarDiseno" class="hidden" onchange="cargarDiseno(event)">
             <label for="cargarDiseno" class="cargarDiseño mt-2 ">Cargar Diseño</label>
-            <pre id="codigoCSS"></pre>
             <button onclick="exportarComoImagen()" class="imagenex mt-2">Exportar como Imagen</button>
 
             </div>
@@ -121,6 +120,13 @@
         <button onclick="generarCSS()" class="cssbut mt-2 w-full  py-2 rounded-lg">
             Generar CSS
         </button>
+        <div id="codigoCSSContainer" class="mt-4 p-4 rounded-lg hidden">
+            <pre id="codigoCSS"></pre> <!-- Aquí se genera el código CSS -->
+            <button onclick="descargarCSS()" class="mt-2 py-2 px-4 rounded-lg bg-blue-500 text-white">
+                Descargar CSS
+            </button>
+        </div>
+
         <h2 class="text-2xl font-bold mt-6">Código HTML Generado</h2>
 <button onclick="descargarHTML()" class="htmldes mt-2 w-full  py-2 rounded-lg">
 Descargar HTML
@@ -128,19 +134,17 @@ Descargar HTML
 <button onclick="generarHTML()" class="htmlgen mt-2 w-full  py-2 rounded-lg">
 Mostrar HTML
 </button>
+<div id="codigoHTMLContainer" class="mt-4 p-4 bg-gray-200 rounded-lg hidden">
+    <pre id="codigoHTML" class="whitespace-pre-wrap"></pre>
+    </div>
 <div class="alinear">
 <button onclick="alinearElementos('izquierda')">Alinear Izquierda</button>
 <button onclick="alinearElementos('derecha')">Alinear Derecha</button>
 <button onclick="alinearElementos('centro')">Alinear Centro</button>
 </div>
-<div id="codigoHTMLContainer" class="mt-4 p-4 bg-gray-200 rounded-lg hidden">
-<pre id="codigoHTML" class="whitespace-pre-wrap"></pre>
-</div>
 
-        <div id="codigoCSSContainer" class="mt-4 p-4 bg-gray-200 rounded-lg hidden">
-            <pre id="codigoCSS" class="whitespace-pre-wrap"></pre>
-            <button onclick="descargarCSS()" class="mt-2  py-2 px-4 rounded-lg">Descargar CSS</button>
-        </div>
+
+       
     </div>
 
 
