@@ -411,53 +411,51 @@ function rgbToHex(rgb) {
 function hacerDraggable(elemento) {
     let offsetX, offsetY;
 
-    elemento.addEventListener("mousedown", function (e) {
+    function iniciarMovimiento(e) {
         if (e.target.classList.contains("resizer")) return;
-        offsetX = e.clientX - elemento.offsetLeft;
-        offsetY = e.clientY - elemento.offsetTop;
+
+        let event = e.type.startsWith("touch") ? e.touches[0] : e;
+        offsetX = event.clientX - elemento.offsetLeft;
+        offsetY = event.clientY - elemento.offsetTop;
         elemento.style.cursor = "grabbing";
 
         function moverElemento(e) {
-            let x = snapToGrid(e.clientX - offsetX);
-            let y = snapToGrid(e.clientY - offsetY);
+            let event = e.type.startsWith("touch") ? e.touches[0] : e;
+            let x = snapToGrid(event.clientX - offsetX);
+            let y = snapToGrid(event.clientY - offsetY);
 
-            // Evitar posiciones negativas
             x = Math.max(0, x);
             y = Math.max(0, y);
 
-            // Evitar que se salga del `previewArea`
             let maxWidth = previewArea.clientWidth - elemento.offsetWidth;
             let maxHeight = previewArea.clientHeight - elemento.offsetHeight;
             x = Math.min(x, maxWidth);
             y = Math.min(y, maxHeight);
 
-            // Verificar colisiones antes de mover
             let colision = elementos.some(el => {
-                if (el === elemento) return false; // No comparar con sí mismo
+                if (el === elemento) return false;
                 return hayColision(el, x, y, elemento.offsetWidth, elemento.offsetHeight);
             });
 
-            if (colision) {
-                // Si hay colisión, no actualizar la posición
-                return;
+            if (!colision) {
+                elemento.style.left = `${x}px`;
+                elemento.style.top = `${y}px`;
             }
-
-            // Actualizar la posición si no hay colisión
-            elemento.style.left = `${x}px`;
-            elemento.style.top = `${y}px`;
         }
 
         function soltarElemento() {
-            document.removeEventListener("mousemove", moverElemento);
-            document.removeEventListener("mouseup", soltarElemento);
+            document.removeEventListener(e.type.startsWith("touch") ? "touchmove" : "mousemove", moverElemento);
+            document.removeEventListener(e.type.startsWith("touch") ? "touchend" : "mouseup", soltarElemento);
             elemento.style.cursor = "grab";
         }
 
-        document.addEventListener("mousemove", moverElemento);
-        document.addEventListener("mouseup", soltarElemento);
-    });
-}
+        document.addEventListener(e.type.startsWith("touch") ? "touchmove" : "mousemove", moverElemento);
+        document.addEventListener(e.type.startsWith("touch") ? "touchend" : "mouseup", soltarElemento);
+    }
 
+    elemento.addEventListener("mousedown", iniciarMovimiento);
+    elemento.addEventListener("touchstart", iniciarMovimiento);
+}
 function hayColision(elemento, x, y, width, height) {
     let rect1 = {
         x: x,
@@ -491,34 +489,32 @@ function hacerRedimensionable(elemento) {
     resizer.style.cursor = "nwse-resize";
     elemento.appendChild(resizer);
 
-    resizer.addEventListener("mousedown", function (e) {
+    function iniciarRedimension(e) {
         e.preventDefault();
-        e.stopPropagation(); // Evita que el evento se propague y active el arrastre
+        e.stopPropagation();
 
-        let initialX = e.clientX;
-        let initialY = e.clientY;
+        let event = e.type.startsWith("touch") ? e.touches[0] : e;
+        let initialX = event.clientX;
+        let initialY = event.clientY;
         let initialWidth = elemento.offsetWidth;
         let initialHeight = elemento.offsetHeight;
 
         function redimensionar(e) {
-            let newWidth = initialWidth + (e.clientX - initialX);
-            let newHeight = initialHeight + (e.clientY - initialY);
+            let event = e.type.startsWith("touch") ? e.touches[0] : e;
+            let newWidth = initialWidth + (event.clientX - initialX);
+            let newHeight = initialHeight + (event.clientY - initialY);
 
-            // Aplicar la cuadrícula
             newWidth = snapToGrid(newWidth);
             newHeight = snapToGrid(newHeight);
 
-            // Obtener límites del área de previsualización
             let maxWidth = previewArea.clientWidth - elemento.offsetLeft;
             let maxHeight = previewArea.clientHeight - elemento.offsetTop;
 
-            // Evitar que se salga del `previewArea`
             newWidth = Math.max(40, Math.min(newWidth, maxWidth));
             newHeight = Math.max(40, Math.min(newHeight, maxHeight));
 
-            // Verificar colisiones
             let colision = elementos.some(el => {
-                if (el === elemento) return false; // No comparar con sí mismo
+                if (el === elemento) return false;
                 return hayColision(el, elemento.offsetLeft, elemento.offsetTop, newWidth, newHeight);
             });
 
@@ -529,24 +525,25 @@ function hacerRedimensionable(elemento) {
                         fusionarElementos(elemento, elementoColisionado);
                     }
                 }
-                // Detener el redimensionamiento inmediatamente
                 soltarRedimension();
                 return;
             }
 
-            // Actualizar el tamaño si no hay colisión
             elemento.style.width = `${newWidth}px`;
             elemento.style.height = `${newHeight}px`;
         }
 
-        function soltarRedimension() {
-            document.removeEventListener("mousemove", redimensionar);
-            document.removeEventListener("mouseup", soltarRedimension);
+        function soltarRedimension(e) {
+            document.removeEventListener(e.type.startsWith("touch") ? "touchmove" : "mousemove", redimensionar);
+            document.removeEventListener(e.type.startsWith("touch") ? "touchend" : "mouseup", soltarRedimension);
         }
 
-        document.addEventListener("mousemove", redimensionar);
-        document.addEventListener("mouseup", soltarRedimension);
-    });
+        document.addEventListener(e.type.startsWith("touch") ? "touchmove" : "mousemove", redimensionar);
+        document.addEventListener(e.type.startsWith("touch") ? "touchend" : "mouseup", soltarRedimension);
+    }
+
+    resizer.addEventListener("mousedown", iniciarRedimension);
+    resizer.addEventListener("touchstart", iniciarRedimension);
 }
 
 function fusionarElementos(elemento1, elemento2) {
