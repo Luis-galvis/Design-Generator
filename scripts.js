@@ -284,6 +284,18 @@ function descargarCSS() {
     link.click();
     document.body.removeChild(link);
 }
+function obtenerNuevoZIndex() {
+    let elementos = document.querySelectorAll('.elemento');
+    let maxZ = elementos.length > 0 
+        ? Math.max(...Array.from(elementos).map(el => parseInt(el.style.zIndex || 0, 10)), 0) 
+        : 0;
+
+    return maxZ + 1;
+}
+
+function actualizarPanelCapas() {
+    console.log("Actualizar panel de capas (pendiente de implementación)");
+}
 
     let elementoSeleccionado = null;
     
@@ -295,10 +307,14 @@ function descargarCSS() {
         elemento.style.height = "100px";
         elemento.style.backgroundColor = "#ddd";
         elemento.style.border = "1px solid #000";
-        elemento.innerHTML = "<h3 class='font-bold'>Sección</h3>";
+        elemento.style.zIndex = obtenerNuevoZIndex(); // Asignamos un zIndex dinámico
+    
+        elemento.innerHTML = `
+            <h3 class='font-bold'>Sección</h3>
+        `;
     
         // Buscar el primer espacio libre en la grilla
-        let espacioLibre = encontrarEspacioLibre(100, 100); // Tamaño del elemento (ancho y alto)
+        let espacioLibre = encontrarEspacioLibre(100, 100);
         if (espacioLibre) {
             elemento.style.left = `${espacioLibre.x}px`;
             elemento.style.top = `${espacioLibre.y}px`;
@@ -308,20 +324,41 @@ function descargarCSS() {
         }
     
         previewArea.appendChild(elemento);
-        elementos.push(elemento); // Agregamos el elemento a la lista para detectar colisiones
-        elemento.ondblclick = () => abrirModal(elemento); // Cambiar a doble clic
-         // Manejo de presión prolongada en móviles
-    let pressTimer;
-    elemento.addEventListener("touchstart", (e) => {
-        pressTimer = setTimeout(() => abrirModal(elemento), 500); // 500ms para activarlo
-    });
-
-    elemento.addEventListener("touchend", () => clearTimeout(pressTimer));
-    elemento.addEventListener("touchmove", () => clearTimeout(pressTimer)); // Cancela si se mueve
-
+        elementos.push(elemento); // Agregamos el elemento a la lista
+    
+        elemento.ondblclick = () => abrirModal(elemento); // Abrir modal en doble clic
+    
+        // Manejo de presión prolongada en móviles
+        let pressTimer;
+        elemento.addEventListener("touchstart", (e) => {
+            pressTimer = setTimeout(() => abrirModal(elemento), 500);
+        });
+        elemento.addEventListener("touchend", () => clearTimeout(pressTimer));
+        elemento.addEventListener("touchmove", () => clearTimeout(pressTimer));
+    
         hacerDraggable(elemento);
         hacerRedimensionable(elemento);
     }
+    function moverAdelante(elemento) {
+        let maxZ = Math.max(...Array.from(document.querySelectorAll('.elemento'))
+            .map(el => parseInt(el.style.zIndex || 0, 10)));
+    
+        elemento.style.zIndex = maxZ + 1;
+    }
+    
+    function moverAtras(elemento) {
+        let elementos = Array.from(document.querySelectorAll('.elemento'));
+        let minZ = Math.min(...elementos.map(el => parseInt(el.style.zIndex || 1, 10)));
+    
+        if (parseInt(elemento.style.zIndex) > 1) { 
+            elemento.style.zIndex = minZ - 1;
+        } else {
+            elemento.style.zIndex = 1; // Evita valores negativos
+        }
+    }
+    
+    
+    
     
     function encontrarEspacioLibre(ancho, alto) {
         const gridWidth = previewArea.clientWidth;
@@ -337,9 +374,9 @@ function descargarCSS() {
                 }
     
                 // Verificar si hay colisión en esta posición
-                let colision = elementos.some(el => {
-                    return hayColision(el, x, y, ancho, alto);
-                });
+                let colision = elementos.some(el => 
+                    hayColision(x, y, ancho, alto, el) // ⬅️ Corrección aquí
+                );
     
                 if (!colision) {
                     // Si no hay colisión, devolver la posición libre
@@ -351,6 +388,7 @@ function descargarCSS() {
         // Si no se encuentra espacio libre, devolver null
         return null;
     }
+    
     
 function agregarResizers(elemento) {
     let resizers = ["top-left", "top-right", "bottom-left", "bottom-right", "top", "bottom", "left", "right"];
@@ -409,7 +447,8 @@ function rgbToHex(rgb) {
     return `#${((1 << 24) + (parseInt(rgbArray[0]) << 16) + (parseInt(rgbArray[1]) << 8) + parseInt(rgbArray[2])).toString(16).slice(1)}`;
 }
 function hacerDraggable(elemento) {
-    let offsetX, offsetY;
+    let offsetX, offsetY, isDragging = false;
+    let lastX = -1, lastY = -1; // 🔥 Guardamos la última posición para optimización
 
     function iniciarMovimiento(e) {
         if (e.target.classList.contains("resizer")) return;
@@ -418,66 +457,101 @@ function hacerDraggable(elemento) {
         offsetX = event.clientX - elemento.offsetLeft;
         offsetY = event.clientY - elemento.offsetTop;
         elemento.style.cursor = "grabbing";
+        
+        // 🔥 Traer el elemento al frente al hacer clic
+        elemento.style.zIndex = obtenerNuevoZIndex();
+        isDragging = true;
 
         function moverElemento(e) {
+            if (!isDragging) return;
+
             let event = e.type.startsWith("touch") ? e.touches[0] : e;
             let x = snapToGrid(event.clientX - offsetX);
             let y = snapToGrid(event.clientY - offsetY);
 
-            x = Math.max(0, x);
-            y = Math.max(0, y);
-
             let maxWidth = previewArea.clientWidth - elemento.offsetWidth;
             let maxHeight = previewArea.clientHeight - elemento.offsetHeight;
-            x = Math.min(x, maxWidth);
-            y = Math.min(y, maxHeight);
+            x = Math.max(0, Math.min(x, maxWidth));
+            y = Math.max(0, Math.min(y, maxHeight));
 
-            let colision = elementos.some(el => {
-                if (el === elemento) return false;
-                return hayColision(el, x, y, elemento.offsetWidth, elemento.offsetHeight);
-            });
+            // 🚀 No recalcular si no ha cambiado la posición
+            if (x === lastX && y === lastY) return;
+            lastX = x;
+            lastY = y;
 
-            if (!colision) {
+            // 🔥 Solo bloquear si hay colisión con elementos del mismo zIndex
+            if (hayColision(x, y, elemento.offsetWidth, elemento.offsetHeight, elemento)) {
+                return;
+            }
+
+            requestAnimationFrame(() => {
                 elemento.style.left = `${x}px`;
                 elemento.style.top = `${y}px`;
-            }
+            });
         }
 
         function soltarElemento() {
-            document.removeEventListener(e.type.startsWith("touch") ? "touchmove" : "mousemove", moverElemento);
-            document.removeEventListener(e.type.startsWith("touch") ? "touchend" : "mouseup", soltarElemento);
+            isDragging = false;
+            document.removeEventListener("mousemove", moverElemento);
+            document.removeEventListener("mouseup", soltarElemento);
+            document.removeEventListener("touchmove", moverElemento);
+            document.removeEventListener("touchend", soltarElemento);
             elemento.style.cursor = "grab";
         }
 
-        document.addEventListener(e.type.startsWith("touch") ? "touchmove" : "mousemove", moverElemento);
-        document.addEventListener(e.type.startsWith("touch") ? "touchend" : "mouseup", soltarElemento);
+        document.addEventListener("mousemove", moverElemento);
+        document.addEventListener("mouseup", soltarElemento, { once: true });
+        document.addEventListener("touchmove", moverElemento);
+        document.addEventListener("touchend", soltarElemento, { once: true });
     }
 
     elemento.addEventListener("mousedown", iniciarMovimiento);
     elemento.addEventListener("touchstart", iniciarMovimiento);
 }
-function hayColision(elemento, x, y, width, height) {
-    let rect1 = {
-        x: x,
-        y: y,
-        width: width,
-        height: height
-    };
 
-    let rect2 = {
-        x: elemento.offsetLeft,
-        y: elemento.offsetTop,
-        width: elemento.offsetWidth,
-        height: elemento.offsetHeight
-    };
 
-    return (
-        rect1.x < rect2.x + rect2.width && // Colisión a la derecha
-        rect1.x + rect1.width > rect2.x && // Colisión a la izquierda
-        rect1.y < rect2.y + rect2.height && // Colisión abajo
-        rect1.y + rect1.height > rect2.y // Colisión arriba
-    );
+
+function hayColision(nuevoX, nuevoY, width, height, elemento) {
+    if (!elemento || elementos.length === 0) return false; // No hay colisión si no hay otros elementos
+
+    let rect1 = { x: nuevoX, y: nuevoY, width, height };
+
+    return elementos.some(el => {
+        if (!el || el === elemento) return false; // Evitar comparar consigo mismo
+
+        let rect2 = {
+            x: el.offsetLeft,
+            y: el.offsetTop,
+            width: el.offsetWidth,
+            height: el.offsetHeight
+        };
+
+        // 📌 Detectar colisión real entre los elementos
+        return (
+            rect1.x < rect2.x + rect2.width &&
+            rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height &&
+            rect1.y + rect1.height > rect2.y
+        );
+    });
 }
+
+
+
+
+
+
+
+function resetearZIndex() {
+    document.querySelectorAll('.elemento').forEach(el => {
+        el.style.zIndex = "1";
+    });
+}
+
+
+
+
+
 function hacerRedimensionable(elemento) {
     let resizer = document.createElement("div");
     resizer.className = "resizer bottom-right";
